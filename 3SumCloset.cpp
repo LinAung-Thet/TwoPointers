@@ -10,33 +10,33 @@ using namespace std;
 class Solution {
 public:
     int threeSumClosest(vector<int>& nums, int target) {
+        sort(nums.begin(), nums.end());
         int n = nums.size();
+        int closestSum = nums[0] + nums[1] + nums[2];
 
-        if(n<3) return target;
-        if(n==3) return (nums[0]+nums[1]+nums[2]);
+        for (int i = 0; i < n - 2; ++i) {
+            int left = i + 1;
+            int right = n - 1;
 
-        int diff = INT_MAX, sum;
+            while (left < right) {
+                int currentSum = nums[i] + nums[left] + nums[right];
 
-        sort(nums.begin(),nums.end());
-
-        for(int i=0; i < n-2; i++){
-            int left = i+1, right = n-1;
-
-            while(left < right) {
-                int bSum = nums[i] + nums[left] + nums[right];
-                if(bSum == target) return bSum;
-
-                int bDiff = abs(target - bSum);
-                if(bDiff < diff) {
-                    diff = bDiff;
-                    sum = bSum;
+                if (abs(currentSum - target) < abs(closestSum - target)) {
+                    closestSum = currentSum;
                 }
 
-                if(bSum > target) right--;
-                else left++;
+                if (currentSum < target) {
+                    ++left;
+                } else if (currentSum > target) {
+                    --right;
+                } else {
+                    // Exact match
+                    return target;
+                }
             }
         }
-        return sum;
+
+        return closestSum;
     }
 };
 int main() {
