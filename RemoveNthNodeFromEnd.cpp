@@ -15,21 +15,28 @@ using namespace std;
 
 class Solution {
 public:
-    // Recursive helper: removes nth node from end and returns updated list
-    ListNode* removeNode(int n, int& backward, ListNode* curr) {
-        if (!curr) return nullptr;
-
-        curr->next = removeNode(n, backward, curr->next);
-        ++backward;
-
-        return (backward == n) ? curr->next : curr;
-    }
-
     ListNode* removeNthFromEnd(ListNode* head, int n) {
-        ListNode dummy(0, head);      // Dummy node to handle head removal
-        int backward = 0;
-        dummy.next = removeNode(n, backward, dummy.next);
-        return dummy.next;
+        ListNode* fast = head;
+        ListNode* slow = head;
+
+        // Move 'fast' n steps ahead
+        for (int i = 0; i < n; ++i)
+            fast = fast->next;
+
+        // If fast is nullptr, we are removing the head
+        if (!fast)
+            return head->next;
+
+        // Move both pointers until 'fast' reaches the end
+        while (fast->next) {
+            fast = fast->next;
+            slow = slow->next;
+        }
+
+        // Skip the nth node from the end
+        slow->next = slow->next->next;
+
+        return head;
     }
 };
 
