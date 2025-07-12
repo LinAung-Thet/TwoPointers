@@ -20,8 +20,11 @@ public:
         ListNode* slow = head;
 
         // Move 'fast' n steps ahead
-        for (int i = 0; i < n; ++i)
+        for (int i = 0; i < n; ++i) {
+            if (!fast)
+                return nullptr; // If n is greater than the length of the list
             fast = fast->next;
+        }
 
         // If fast is nullptr, we are removing the head
         if (!fast)
