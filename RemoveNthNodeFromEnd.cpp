@@ -15,37 +15,21 @@ using namespace std;
 
 class Solution {
 public:
-    ListNode* removeNode(int& n, int& forward, int& backward, ListNode* curr) {
-        forward++;
-        if(curr->next == nullptr) {
-            backward = 1;
-            if(n==1)    // last node
-                return nullptr;
-            return curr;
-        }
-        ListNode* nextNode = removeNode(n, forward, backward, curr->next);
+    // Recursive helper: removes nth node from end and returns updated list
+    ListNode* removeNode(int n, int& backward, ListNode* curr) {
+        if (!curr) return nullptr;
 
-        // if (backward > 0) {
-            backward++;
-            curr->next = nextNode;
+        curr->next = removeNode(n, backward, curr->next);
+        ++backward;
 
-            if(backward == n) {
-                return nextNode;
-            }
-            else {
-                return curr;
-            }
-        // }
+        return (backward == n) ? curr->next : curr;
     }
+
     ListNode* removeNthFromEnd(ListNode* head, int n) {
-        if(head == nullptr || head->next == nullptr) return nullptr;
-
-        ListNode buff(0, head);
-        int forward = 0, backward = 0;
-
-        removeNode(n, forward, backward, &buff);
-
-        return buff.next;
+        ListNode dummy(0, head);      // Dummy node to handle head removal
+        int backward = 0;
+        dummy.next = removeNode(n, backward, dummy.next);
+        return dummy.next;
     }
 };
 
