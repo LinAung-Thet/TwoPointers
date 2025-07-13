@@ -16,52 +16,33 @@ using namespace std;
 class Solution {
 public:
     ListNode* rotateRight(ListNode* head, int k) {
-        if(head == nullptr || head->next == nullptr) return head;
+        if (!head || !head->next || k == 0) return head;
 
-        ListNode* left = head;
-        ListNode* right = head;
-        ListNode* last;
-        int count = 0;
-
-        // Place the sliding window which has k nodes in length
-        for (int i = 0; i < k; i++) {
-            if (right == nullptr)
-                break;
-            right = right->next;
-            ++count;
+        // Step 1: Compute length of list and get tail
+        int length = 1;
+        ListNode* tail = head;
+        while (tail->next) {
+            tail = tail->next;
+            ++length;
         }
 
-        if(count == k && right == nullptr) return head;
-        if(count != k) { // k is greater than the length of the list
-            k = k % count;
+        // Step 2: Compute effective rotation
+        k %= length;
+        if (k == 0) return head;
 
-            // Place the sliding window again
-            right = head;
-            for (int i = 0; i < k; i++) {
-                if (!right)
-                    break;
-                right = right->next;
-            }
+        // Step 3: Connect tail to head to form a circular list
+        tail->next = head;
+
+        // Step 4: Find new tail (length - k - 1) and new head (length - k)
+        ListNode* newTail = head;
+        for (int i = 0; i < length - k - 1; ++i) {
+            newTail = newTail->next;
         }
 
-        if (!right)
-            return nullptr;
+        ListNode* newHead = newTail->next;
+        newTail->next = nullptr;
 
-        // Move the window until the end
-        while(right->next) {
-            last = left;
-            right = right->next;
-            left = left->next;
-        }
-
-        // Bring the nodes in the window to the front
-        // if(last)
-        //     last->next = nullptr;
-        right->next = head;
-        head = left->next;
-        left->next = nullptr;
-
-        return head;
+        return newHead;
     }
 };
 
