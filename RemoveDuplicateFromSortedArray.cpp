@@ -7,21 +7,18 @@ using namespace std;
 class Solution {
 public:
     int removeDuplicates(vector<int>& nums) {
-        // Special case
-        if(nums.size() < 3) {
-            return nums.size();
-        }
-        // Initialize an integer k that updates the kth index of the array
-        // only when the current element does not match either of the two previous indexes
-        int k = 2;
-        for(int i = 2; i < nums.size(); i++){
-            // If the index does not match the (k-1)th and (k-2)th elements, count that element
-            if(nums[i] != nums[k - 2] || nums[i] != nums[k - 1]){
-                nums[k] = nums[i];
-                k++;
-            // If the index matches the (k-1)th and (k-2)th elements, we skip it
+        int n = nums.size();
+        if(n < 3) return n;
+
+        int k = 2;  // Position to overwrite
+
+        for (int i = 2; i < n; ++i) {
+            // Accept the current number if it's one of the first two occurrences
+            if (nums[i] != nums[k - 2]) {
+                nums[k++] = nums[i];
             }
         }
+
         return k;
     }
 };
