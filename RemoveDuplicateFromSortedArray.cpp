@@ -7,52 +7,40 @@ using namespace std;
 class Solution {
 public:
     int removedItem = -INT_MAX; // to mark removed items
-    void shiftLeft(vector<int>& nums, int& start, int& n) {
-        for (int i = start; i < n-1; ++i) {
-            if(nums[i+1] == removedItem) {
-                nums[i] = removedItem; // mark as removed
-                return; // no need to shift further
-            }
-            nums[i] = nums[i + 1];
-        }
-        nums[n - 1] = removedItem; // mark last item as removed
-        return;
-    }
     int removeDuplicates(vector<int>& nums) {
         int n = nums.size();
         if(n < 3) return n;
 
-        int k = 0, left = 0, right = 1, duplicate = 0;
+        int k = 0, left = 0, right = n - 1;
+        int removedItem = -INT_MAX; // to mark removed items
 
-        while(right < n && nums[right] != removedItem) {
-            if (nums[left] == nums[right]) {
-                ++duplicate;
-                if (duplicate == 1) { // first duplicate found
-                    k = right + 1;
+        while(left < right) {
+            if (nums[left] == nums[left + 1]) {
+                int count = 0; // count duplicates
+                int tmp = left + 2;
+                
+                // count the number of duplicates
+                while (tmp < n && nums[tmp] == nums[left]) {
+                    ++count;
+                    ++tmp;
                 }
-                else {
-                    // shift the items, starting from right + 1 until -INT_MAX, to the left
-                    for (int i = right; i < n-1; ++i) {
-                        if(nums[i+1] == removedItem) {
-                            nums[i] = removedItem; // mark as removed
-                            break; // no need to shift further
-                        }
-                        nums[i] = nums[i + 1];
+                if(count > 0) {
+                    // shift the items, starting from tmp until -INT_MAX, to the left
+                    for (int i = left + 2; i <= right - count; ++i) {
+                        nums[i] = nums[i + count];
                     }
-                    nums[n - 1] = removedItem; // mark last item as removed
-
-                    --duplicate; // decrement duplicate count since we just shifted one item
-                    continue; // continue to check the next item
+                    for(int i = 0; i < count; ++i) {
+                        nums[right--] = removedItem; // mark the items behind the shifted ones as removed
+                    }   
                 }
+
+                left += 2;
             }
             else {
-                k = right + 1;
-                duplicate = 0; // reset duplicate count
+                ++left; 
             }
-            ++left; 
-            ++right;
         }
-        return nums[n-1] == removedItem ? k : n; // if last item is removed, return k, else return n
+        return right + 1;
     }
 };
 // Test cases
