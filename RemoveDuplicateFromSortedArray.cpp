@@ -6,41 +6,23 @@ using namespace std;
 
 class Solution {
 public:
-    int removedItem = -INT_MAX; // to mark removed items
     int removeDuplicates(vector<int>& nums) {
-        int n = nums.size();
-        if(n < 3) return n;
-
-        int k = 0, left = 0, right = n - 1;
-        int removedItem = -INT_MAX; // to mark removed items
-
-        while(left < right) {
-            if (nums[left] == nums[left + 1]) {
-                int count = 0; // count duplicates
-                int tmp = left + 2;
-                
-                // count the number of duplicates
-                while (tmp < n && nums[tmp] == nums[left]) {
-                    ++count;
-                    ++tmp;
-                }
-                if(count > 0) {
-                    // shift the items, starting from tmp until -INT_MAX, to the left
-                    for (int i = left + 2; i <= right - count; ++i) {
-                        nums[i] = nums[i + count];
-                    }
-                    for(int i = 0; i < count; ++i) {
-                        nums[right--] = removedItem; // mark the items behind the shifted ones as removed
-                    }   
-                }
-
-                left += 2;
-            }
-            else {
-                ++left; 
+        // Special case
+        if(nums.size() < 3) {
+            return nums.size();
+        }
+        // Initialize an integer k that updates the kth index of the array
+        // only when the current element does not match either of the two previous indexes
+        int k = 2;
+        for(int i = 2; i < nums.size(); i++){
+            // If the index does not match the (k-1)th and (k-2)th elements, count that element
+            if(nums[i] != nums[k - 2] || nums[i] != nums[k - 1]){
+                nums[k] = nums[i];
+                k++;
+            // If the index matches the (k-1)th and (k-2)th elements, we skip it
             }
         }
-        return right + 1;
+        return k;
     }
 };
 // Test cases
