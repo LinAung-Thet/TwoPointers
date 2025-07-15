@@ -2,55 +2,34 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 class Solution {
 public:
     string reverseWords(string s) {
-        if(s.empty()) return s;
-
-        // const char eosChar = '\0';
-        const char space = ' ';
-        const char* str = s.c_str();
-        const char* end = str + s.length();
-        string reverse;
+        istringstream iss(s);
         string word;
+        vector<string> words;
 
-        while(str != end) {
-
-            // If there is a space
-            if(*str == space) {
-                // If the word is not empty, add it to the reverse string
-                if(!word.empty()) {
-                    if(!reverse.empty()) {
-                        reverse = word + space + reverse; // Add a space before the word
-                    } else {
-                        reverse = word; // First word, no leading space
-                    }
-                    word.clear(); // Clear the current word
-                }
-
-                while(*str == space) {
-                    ++str;    // skip all the white space
-                    if(str == end) {
-                        return reverse;
-                    }
-                }
-            } 
-            else {
-                word += *str;   // Add character to the current word
-
-                ++str; // Move to the next character
-            }
+        // Extract words from the stream
+        while (iss >> word) {
+            words.push_back(word);
         }
-        if(!word.empty()) {
-            if(!reverse.empty()) {
-                reverse = word + space + reverse; // Add a space before the last word
-            } else {
-                reverse = word; // Last word, no leading space
-            }
+
+        // Reverse word order
+        reverse(words.begin(), words.end());
+
+        // Rebuild the string with single spaces
+        ostringstream oss;
+        for (int i = 0; i < words.size(); ++i) {
+            if (i > 0) oss << ' ';
+            oss << words[i];
         }
-        return reverse;
+
+        return oss.str();
     }
 };
 // Test cases
@@ -61,19 +40,19 @@ int main() {
     // Test case 1
     s = "the sky is blue";
     cout << "Original: " << s << endl;
-    cout << "Result:   " << sol.reverseWords(s) << endl; 
+    cout << "Result  : " << sol.reverseWords(s) << endl; 
     cout << "Expected: blue is sky the" << endl << endl;
 
     // Test case 2
     s = "  hello world  ";
     cout << "Original: " << s << endl;
-    cout << "Result:   " << sol.reverseWords(s) << endl; 
+    cout << "Result  : " << sol.reverseWords(s) << endl; 
     cout << "Expected: world hello" << endl << endl;
 
     // Test case 3
     s = "a good   example";
     cout << "Original: " << s << endl;
-    cout << "Result:   " << sol.reverseWords(s) << endl; 
+    cout << "Result  : " << sol.reverseWords(s) << endl; 
     cout << "Expected: example good a" << endl;
 
     return 0;
