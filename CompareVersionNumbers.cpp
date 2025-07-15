@@ -7,41 +7,27 @@ using namespace std;
 class Solution {
 public:
     int compareVersion(string version1, string version2) {
-        size_t start1 = 0, start2 = 0, end1 = 0, end2 = 0;
-        string subV1, subV2;
-        int v1, v2;
+        int i = 0, j = 0;
+        int n1 = version1.length(), n2 = version2.length();
 
-        string delim = ".";
-        while(end1 != string::npos || end2 != string::npos) {
-            v1 = 0; v2 = 0; // Reset for each segment
+        while (i < n1 || j < n2) {
+            int num1 = 0, num2 = 0;
 
-            if(end1 != string::npos) {
-                end1 = version1.find(delim, start1);
-                if(end1 == string::npos) {
-                    subV1 = version1.substr(start1);
-                }
-                else {
-                    subV1 = version1.substr(start1, end1 - start1);
-                    start1 = end1 + 1; // size of delim
-                }
-                v1 = stoi(subV1);
+            while (i < n1 && version1[i] != '.') {
+                num1 = num1 * 10 + (version1[i++] - '0');
             }
 
-            if(end2 != string::npos) {
-                end2 = version2.find(delim, start2);
-                if(end2 == string::npos) {
-                    subV2 = version2.substr(start2);
-                }
-                else {
-                    subV2 = version2.substr(start2, end2 - start2);
-                    start2 = end2 + 1;
-                }
-                v2 = stoi(subV2);
+            while (j < n2 && version2[j] != '.') {
+                num2 = num2 * 10 + (version2[j++] - '0');
             }
 
-            if(v1 < v2) return -1;
-            else if(v1 > v2) return 1;
+            if (num1 < num2) return -1;
+            if (num1 > num2) return 1;
+
+            ++i;  // skip the dot
+            ++j;
         }
+
         return 0;
     }
 };
