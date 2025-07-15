@@ -4,7 +4,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <algorithm>
+#include <stack>
 using namespace std;
 
 class Solution {
@@ -12,24 +12,22 @@ public:
     string reverseWords(string s) {
         istringstream iss(s);
         string word;
-        vector<string> words;
+        stack<string> stk;
 
-        // Extract words from the stream
+        // Push each word onto the stack
         while (iss >> word) {
-            words.push_back(word);
+            stk.push(word);
         }
 
-        // Reverse word order
-        reverse(words.begin(), words.end());
-
-        // Rebuild the string with single spaces
-        ostringstream oss;
-        for (int i = 0; i < words.size(); ++i) {
-            if (i > 0) oss << ' ';
-            oss << words[i];
+        // Build reversed string from stack
+        string result;
+        while (!stk.empty()) {
+            result += stk.top();
+            stk.pop();
+            if (!stk.empty()) result += " ";
         }
 
-        return oss.str();
+        return result;
     }
 };
 // Test cases
