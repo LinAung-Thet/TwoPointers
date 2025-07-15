@@ -7,18 +7,23 @@ using namespace std;
 class Solution {
 public:
     int findDuplicate(vector<int>& nums) {
-        int n = nums.size();
-        int count = 0;
+        int slow = nums[0];
+        int fast = nums[0];
 
-        for(int i = 0; i < n; i++) {
-            for(int j = n - 1; j > i; j--) {
-                if(nums[i] == nums[j]) {
-                    return nums[i];
-                }
-            }
+        // Step 1: Detect intersection point inside the cycle
+        do {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        } while (slow != fast);
+
+        // Step 2: Find the entrance to the cycle (i.e., the duplicate number)
+        slow = nums[0];
+        while (slow != fast) {
+            slow = nums[slow];
+            fast = nums[fast];
         }
-        
-        return -1;
+
+        return slow;
     }
 };
 // Test cases
@@ -42,13 +47,13 @@ int main() {
     nums = {3, 3, 3, 3};
     cout << "Numbers  : 3 3 3 3" << endl;
     cout << "Duplicate: " << sol.findDuplicate(nums) << endl; 
-    cout << "Expected : 3" << endl;
+    cout << "Expected : 3" << endl << endl;
 
     // Test case 3
     nums = {4, 3, 1, 4, 2};
     cout << "Numbers  : 4 3 1 4 2" << endl;
     cout << "Duplicate: " << sol.findDuplicate(nums) << endl; 
-    cout << "Expected : 4" << endl;
+    cout << "Expected : 4" << endl << endl;
 
     return 0;
 }
