@@ -13,27 +13,18 @@ public:
 
         int left = 0, right = 1, c = 0;
         while(left < n) {
-            int d = 0;
+            int d = 1;
             chars[c++] = chars[left];
             while(right < n && chars[left] == chars[right]) {
                 ++d;
                 ++right;
             }
-            d = d > 0 ? ++d : d;
 
-            stack<char> s;
-            while(d > 0) {
-                if(d == 10) {
-                    s.push('0');
-                    s.push('1');
-                    break;
+            if(d > 1) {
+                string countstr = to_string(d);
+                for(char ch : countstr) {
+                    chars[c++] = ch;
                 }
-                s.push(d % 10 + '0');
-                d = d / 10;
-            }
-            while(!s.empty()) {
-                chars[c++] = s.top();
-                s.pop();
             }
         
             left = right++;
