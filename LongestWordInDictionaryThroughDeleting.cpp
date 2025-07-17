@@ -13,15 +13,15 @@ public:
         for(string& word: dictionary) {
             const char* c = s.c_str();
             bool found = false;
-            int w = 0;
+            const char* w = word.c_str();
             while(*c != '\0') {
-                if(word[w] == *c)
+                if(*w == *c)
                     ++w;
                 ++c;
             }
             
             // Check if all the characters have been compared
-            if(w == word.size()) {
+            if(*w == '\0') {
                 if(word.size() == longest.size())
                     longest = word < longest ? word : longest;
                 else if(word.size() > longest.size()) {
