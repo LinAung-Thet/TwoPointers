@@ -12,21 +12,19 @@ public:
         sort(heaters.begin(), heaters.end());
 
         int radius = 0;
+        int rHeater = 0;
+        for(int house : houses) {
+            while(rHeater < heaters.size() && house > heaters[rHeater]) {
+                ++rHeater;
+            }
+            
+            int lHeater = rHeater > 0 ? rHeater - 1 : 0; // Move the left heater to the left of the house
+            
+            int dist1 = house < heaters[lHeater] ? INT_MAX : house - heaters[lHeater];   // check if there is a heater to the left of the house
+            int dist2 = rHeater >= heaters.size() ? INT_MAX : heaters[rHeater] - house;  // check if there is a heater to the right of the house
 
-        for (int house : houses) {
-            // Find the insertion point (lower bound) for the house in heaters
-            auto it = lower_bound(heaters.begin(), heaters.end(), house);
-
-            int dist1 = (it == heaters.end()) ? INT_MAX : *it - house;
-            int dist2 = (it == heaters.begin()) ? INT_MAX : house - *(prev(it));
-
-            // Minimal distance to a heater
-            int closest = min(dist1, dist2);
-
-            // Update max distance
-            radius = max(radius, closest);
+            radius = max(radius, min(dist1, dist2));
         }
-
         return radius;
     }
 };
