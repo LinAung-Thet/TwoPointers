@@ -8,42 +8,22 @@ using namespace std;
 class Solution {
 public:
     vector<int> findClosestElements(vector<int>& arr, int k, int x) {
-        int n = arr.size();
-        if(n == k) return arr;
+        int left = 0;
+        int right = arr.size() - k;
 
-        vector<int> closetNums;
+        // Binary search for the optimal starting index
+        while (left < right) {
+            int mid = (left + right) / 2;
 
-        auto pos = lower_bound(arr.begin(), arr.end(), x);
-
-        int l;
-        if(pos == arr.begin()) {
-            l = 0;
-        }
-        else if(pos == arr.end()) {
-            l = n - k;
-        }
-        else {
-            int i = distance(arr.begin(), pos);
-            int length = k;
-            int left = i, right = i;
-
-            while(length > 0 && left > 0 && right < n) {
-                int dist1 = abs(x - arr[left - 1]);
-                int dist2 = abs(arr[right] - x);
-
-                if(dist1 <= dist2) --left;
-                else ++right;
-
-                --length;
-            }
-
-            left = right >= n ? left - length: left;
-            l = left;
+            // Compare distances between arr[mid] and arr[mid + k] to x
+            if (x - arr[mid] > arr[mid + k] - x)
+                left = mid + 1;
+            else
+                right = mid;
         }
 
-        closetNums.assign(arr.begin() + l, arr.begin() + l + k);
-
-        return closetNums;
+        // Return subarray starting from best index
+        return vector<int>(arr.begin() + left, arr.begin() + left + k);
     }
 };
 // Test cases
