@@ -7,26 +7,33 @@ using namespace std;
 class Solution {
 public:
     string longestPalindrome(string s) {
-        int n = s.size();
-        for(int i = 0; i < n; i++) {
-            // Check if the substring allocated by the sliding window is palindromic
-            int winSize = n - i;
-            for(int w = 0; w <= n - winSize; w++) {
-                int left = w, right = w + winSize - 1;
-                bool palindromic = true;
+        if (s.empty()) return "";
 
-                // Check if palindromic
-                while(left <= right) {
-                    if(s[left++] != s[right--]) {
-                        palindromic = false;
-                        break;  // Isn't palindromic
-                    }
+        int start = 0, maxLen = 1;
+
+        for (int i = 0; i < s.size(); ++i) {
+            // Odd-length palindrome
+            int l = i, r = i;
+            while (l >= 0 && r < s.size() && s[l] == s[r]) {
+                if (r - l + 1 > maxLen) {
+                    start = l;
+                    maxLen = r - l + 1;
                 }
-                if(palindromic)
-                    return s.substr(w, winSize);    // Is palindromic
+                --l; ++r;
+            }
+
+            // Even-length palindrome
+            l = i, r = i + 1;
+            while (l >= 0 && r < s.size() && s[l] == s[r]) {
+                if (r - l + 1 > maxLen) {
+                    start = l;
+                    maxLen = r - l + 1;
+                }
+                --l; ++r;
             }
         }
-        return "";
+
+        return s.substr(start, maxLen);
     }
 };
 // Test cases
