@@ -7,34 +7,36 @@ using namespace std;
 class Solution {
 public:
     bool canTransform(string start, string result) {
-        int n = start.size();
-        if(n < 2) return start == result;
+        if (start.length() != result.length()) return false;
 
-        bool changed = false;
-        do {
-            changed = false;
-            int i = -1;
-            while(i < n - 2) {
-                ++i;
+        int n = start.length();
+        int i = 0, j = 0;
 
-                if((start[i] == result[i] && start[i+1] == result[i+1]) ||
-                    (start[i] == start[i+1]) || 
-                    (start[i] != 'X' && start[i+1] != 'X')) { 
-                    continue; 
-                }
+        while (i < n && j < n) {
+            // Skip 'X' characters
+            while (i < n && start[i] == 'X') ++i;
+            while (j < n && result[j] == 'X') ++j;
 
-                string sub {start[i], start[i+1]};
-                if((sub == "XL" || sub == "RX") && 
-                        start[i] == result[i+1] && start[i+1] == result[i]) {
-                    start[i+1] = result[i+1];
-                    start[i] = result[i];
+            // If both strings are fully traversed
+            if (i == n && j == n) return true;
+            if (i == n || j == n) return false;
 
-                    changed = true;
-                }
-            }
-        } while(changed && start != result);
+            // Characters at current positions must match (ignoring X)
+            if (start[i] != result[j]) return false;
 
-        return start == result;
+            // Movement constraints
+            if (start[i] == 'L' && i < j) return false; // L can only move left
+            if (start[i] == 'R' && i > j) return false; // R can only move right
+
+            ++i;
+            ++j;
+        }
+
+        // Remaining characters should be only X
+        while (i < n) if (start[i++] != 'X') return false;
+        while (j < n) if (result[j++] != 'X') return false;
+
+        return true;
     }
 };
 // Test cases
@@ -42,37 +44,37 @@ int main() {
     Solution sol;
     string start, result;
 
-    // cout << "Test case 1" << endl;
-    // start = "RXXLRXRXL";
-    // result = "XRLXXRRLX";
-    // cout << "Start: " << start << endl;
-    // cout << "Result: " << result << endl;
-    // cout << "Can transform: " << (sol.canTransform(start, result) ? "Yes" : "No") << endl; 
-    // cout << "Expected: Yes" << endl << endl;
+    cout << "Test case 1" << endl;
+    start = "RXXLRXRXL";
+    result = "XRLXXRRLX";
+    cout << "Start: " << start << endl;
+    cout << "Result: " << result << endl;
+    cout << "Can transform: " << (sol.canTransform(start, result) ? "Yes" : "No") << endl; 
+    cout << "Expected: Yes" << endl << endl;
 
-    // cout << "Test case 2" << endl;
-    // start = "X";
-    // result = "L";
-    // cout << "Start: " << start << endl;
-    // cout << "Result: " << result << endl;
-    // cout << "Can transform: " << (sol.canTransform(start, result) ? "Yes" : "No") << endl; 
-    // cout << "Expected: No" << endl << endl;
+    cout << "Test case 2" << endl;
+    start = "X";
+    result = "L";
+    cout << "Start: " << start << endl;
+    cout << "Result: " << result << endl;
+    cout << "Can transform: " << (sol.canTransform(start, result) ? "Yes" : "No") << endl; 
+    cout << "Expected: No" << endl << endl;
 
-    // cout << "Test case 3" << endl;
-    // start = "RL";
-    // result = "LR";
-    // cout << "Start: " << start << endl;
-    // cout << "Result: " << result << endl;
-    // cout << "Can transform: " << (sol.canTransform(start, result) ? "Yes" : "No") << endl; 
-    // cout << "Expected: No" << endl << endl;
+    cout << "Test case 3" << endl;
+    start = "RL";
+    result = "LR";
+    cout << "Start: " << start << endl;
+    cout << "Result: " << result << endl;
+    cout << "Can transform: " << (sol.canTransform(start, result) ? "Yes" : "No") << endl; 
+    cout << "Expected: No" << endl << endl;
 
-    // cout << "Test case 4" << endl;
-    // start = "LXXLXRLXXL";
-    // result = "XLLXRXLXLX";
-    // cout << "Start: " << start << endl;
-    // cout << "Result: " << result << endl;
-    // cout << "Can transform: " << (sol.canTransform(start, result) ? "Yes" : "No") << endl; 
-    // cout << "Expected: No" << endl << endl;
+    cout << "Test case 4" << endl;
+    start = "LXXLXRLXXL";
+    result = "XLLXRXLXLX";
+    cout << "Start: " << start << endl;
+    cout << "Result: " << result << endl;
+    cout << "Can transform: " << (sol.canTransform(start, result) ? "Yes" : "No") << endl; 
+    cout << "Expected: No" << endl << endl;
 
     cout << "Test case 5" << endl;
     start = "XXXXXLXXXX";
