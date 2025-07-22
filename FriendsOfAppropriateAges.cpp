@@ -8,26 +8,16 @@ using namespace std;
 class Solution {
 public:
     int numFriendRequests(vector<int>& ages) {
-        vector<int> sorted = ages;
-        sort(sorted.begin(), sorted.end());
-
-        int total = 0;
-        int n = sorted.size();
-
-        for (int i = 0; i < n; ++i) {
-            int ageX = sorted[i];
-            if (ageX < 15) continue;  // No one under 15 can send requests
-
-            // Find lower bound: ageY > 0.5 * ageX + 7
-            int minAge = ageX / 2 + 7;
-            auto lower = upper_bound(sorted.begin(), sorted.end(), minAge);
-            auto upper = upper_bound(sorted.begin(), sorted.end(), ageX);
-
-            int count = upper - lower;
-            if (count > 0) total += count - 1;  // exclude self
+        int freq[121] = {0}, n = ages.size();
+        for(int i = 0; i < n; ++i) ++freq[ages[i]];
+        for(int i = 1; i < 121; ++i) freq[i] += freq[i - 1];
+        int res = 0;
+        for(int i = 0; i < n; ++i){
+            if(ages[i] < 15) continue;
+            int low = 0.5 * ages[i] + 7;
+            res += freq[ages[i]] - freq[low] - 1;
         }
-
-        return total;
+        return res;
     }
 };
 // Test cases
