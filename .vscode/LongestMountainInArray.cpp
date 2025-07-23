@@ -8,46 +8,31 @@ class Solution {
 public:
     int longestMountain(vector<int>& arr) {
         int n = arr.size();
-        if (n < 3) return 0;
+        int maxLen = 0;
+        int i = 1;
 
-        bool asc = true;
-        int left = n, right = 0;
-        int maxLength = 0;
+        while (i < n - 1) {
+            // Check if arr[i] is a peak
+            if (arr[i - 1] < arr[i] && arr[i] > arr[i + 1]) {
+                int left = i - 1;
+                int right = i + 1;
 
-        for (int i = 0; i < n - 1; ++i) {
-            int curr = arr[i], next = arr[i+1];
-            if(asc){    // Ascending mode
-                if (next == curr) {
-                    left = n; // reset the left pointer
-                }
-                else if (next > curr) {
-                    left = min(left, i);    // move the left pointer
-                }
-                else {
-                    asc = false || left == n;
-                }
-            }
-            else {  // Descending mode
-                if (next >= curr) {
-                    // Change the mode to asc
-                    right = i;
-                    maxLength = max(maxLength, right - left + 1);
-                    left = next == curr ? n : i;  // reset/move the left pointer
-                    asc = true;
-                }
-                else {
-                    // No actions required
-                }
+                // Expand to the left
+                while (left > 0 && arr[left - 1] < arr[left]) --left;
+
+                // Expand to the right
+                while (right < n - 1 && arr[right] > arr[right + 1]) ++right;
+
+                // Update maxLen
+                maxLen = max(maxLen, right - left + 1);
+
+                i = right + 1;  // Skip to end of current mountain
+            } else {
+                ++i;
             }
         }
 
-        // Final check if we ended in descending mode
-        if (!asc && arr[n - 1] < arr[n - 2]) {
-            right = n - 1;
-            maxLength = max(maxLength, right - left + 1);
-        }
-
-        return maxLength;
+        return maxLen;
     }
 };
 // Test cases
