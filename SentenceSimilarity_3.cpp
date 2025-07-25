@@ -10,30 +10,28 @@ using namespace std;
 
 class Solution {
 public:
-    vector<string> splitWords(const string& s) {
-        vector<string> words;
-        istringstream iss(s);
-        string word;
-        while (iss >> word)
-            words.push_back(word);
-        return words;
-    }
-
     bool areSentencesSimilar(string sentence1, string sentence2) {
-        vector<string> A = splitWords(sentence1);
-        vector<string> B = splitWords(sentence2);
+        if (sentence1.size() > sentence2.size()) swap(sentence1, sentence2);
 
-        // Always make A the shorter or equal
-        if (A.size() > B.size())
-            swap(A, B);
+        int n = sentence1.size(), m = sentence2.size();
+        if(n == m) return sentence1 == sentence2;
 
+        int prefixEnd = -1, suffixStart = -1;
         int i = 0;
-        while (i < A.size() && A[i] == B[i]) ++i;
+        while (i < n && sentence1[i] == sentence2[i]) {
+            if (sentence1[i] == ' ') prefixEnd = i;
+            ++i;
+        }
+        if (i == n && (sentence2[i] == ' ')) return true;
 
-        int j = 0;
-        while (j < A.size() - i && A[A.size() - 1 - j] == B[B.size() - 1 - j]) ++j;
-
-        return (i + j == A.size());
+        int j = n - 1, k = m - 1;
+        while (j >= 0 && sentence1[j] == sentence2[k]) {
+            if (sentence1[j] == ' ') suffixStart = j;
+            --j; --k;
+        }
+        if (j < 0 && (sentence2[k] == ' ')) return true;
+        
+        return prefixEnd != -1 && suffixStart != -1 && suffixStart <= prefixEnd;
     }
 };
 // Test cases
