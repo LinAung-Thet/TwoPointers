@@ -35,7 +35,7 @@ int main() {
     vector<int> removable;
     int result;
 
-    cout << "Test case 1";
+    cout << "Test case 1" << endl;
     s = {"abcacb"};
     p = {"ab"};
     removable = {3, 1, 0};
@@ -45,7 +45,7 @@ int main() {
     cout << "Expected : " << 2 << endl;
     cout << "Result   : " << result << endl << endl;
 
-    cout << "Test case 2";
+    cout << "Test case 2" << endl;
     s = {"abcbddddd"};
     p = {"abcd"};
     removable = {3, 2, 1, 4, 5, 6};
@@ -55,7 +55,7 @@ int main() {
     cout << "Expected : " << 1 << endl;
     cout << "Result   : " << result << endl << endl;
 
-    cout << "Test case 3";
+    cout << "Test case 3" << endl;
     s = {"abcacb"};
     p = {"abc"};
     removable = {0, 1, 2, 3, 4};
