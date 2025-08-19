@@ -13,29 +13,25 @@ struct ListNode {
  class Solution {
 public:
     ListNode* deleteDuplicates(ListNode* head) {
-        ListNode dummy = ListNode(0, head);
-        ListNode* curr = &dummy;
-        ListNode* nextNode = curr->next;
-        while(curr != nullptr) {
-            int count = 0;
+        ListNode dummy(0, head);
+        ListNode* prev = &dummy; // prev is used to track the unique nodes
 
-            while(nextNode != nullptr && nextNode->next != nullptr && 
-                curr->next->val == nextNode->next->val) {
-                ++count;
-                nextNode = nextNode->next;
+        while (head != nullptr) {
+            bool duplicate = false;
+            while (head->next != nullptr && head->val == head->next->val) {
+                head = head->next;
+                duplicate = true;
             }
 
-            if(count > 0) {
-                curr->next = nextNode->next;
-                nextNode = curr->next;
+            if (duplicate) {
+                prev->next = head->next;    // skip all the duplicates
             }
             else {
-                curr = curr->next;
-                if(curr == nullptr) break;
-                nextNode = curr->next == nullptr ? nullptr : curr->next;
+                prev = prev->next;          // just follow the sequence
             }
-        }
 
+            head = head->next;
+        }
         return dummy.next;
     }
 };
